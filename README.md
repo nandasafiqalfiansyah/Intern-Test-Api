@@ -158,8 +158,8 @@ Buatkan kode SQL untuk:
 ![Hasil Bonus 2](public/image/bonus2.png)
 
 ### [Aturan SQL](#aturan-sql)
-- Perhitungan wajib menggunakan **SQL Query**, bukan koleksi Laravel.
-- Koleksi hanya boleh digunakan untuk tahap akhir (grouping).
+- Perhitungan wajib menggunakan **SQL Query**, bukan koleksi Laravel ✅.
+- Koleksi hanya boleh digunakan untuk tahap akhir (grouping) ✅.
 
 ### [Petunjuk](#petunjuk)
 - **Nilai RT** menggunakan `materi_uji_id = 7` tanpa memasukkan `pelajaran_khusus` ✅.
