@@ -88,7 +88,7 @@ URL: `https://api-testapp-02aebf99a503.herokuapp.com/api/v1/logout`
 
 ---
 
-# TES BACKEND (SQL) -> BONUS NILAI ✅.
+# TES BACKEND (SQL) -> BONUS NILAI.
 Tes ini dirancang untuk mengevaluasi pemahaman Anda dalam SQL.
 
 ## Requirement
@@ -106,7 +106,7 @@ URL: `public/image/bonus2.png`
 - **Endpoint:** `https://api-testapp-02aebf99a503.herokuapp.com/api/v1/nilaiST`
 
 ### Aturan
-- Perhitungan wajib menggunakan SQL, penggunaan Collection hanya diperbolehkan untuk pengolahan data terakhir (grouping).
+- Perhitungan wajib menggunakan SQL, penggunaan Collection hanya diperbolehkan untuk pengolahan data terakhir (grouping)  ✅.
 
 ### Petunjuk
 - Untuk nilai RT menggunakan `materi_uji_id = 7`, tetapi tidak mengikutkan `pelajaran_khusus`  ✅.
