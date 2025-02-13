@@ -27,8 +27,8 @@
 
 ## Instalasi
 ```bash
-git clone https://github.com/your-repository.git
-cd your-repository
+git clone https://github.com/nandasafiqalfiansyah/Intern-test-api.git
+cd Intern-test-api
 composer install
 cp .env.example .env
 php artisan key:generate
