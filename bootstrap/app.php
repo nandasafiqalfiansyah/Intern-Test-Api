@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        $middleware->append( \Illuminatech\MultipartMiddleware\MultipartFormDataParser::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

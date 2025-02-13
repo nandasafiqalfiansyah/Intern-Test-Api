@@ -20,9 +20,9 @@ class EmployeeController extends Controller
                 ->when($request->division_id, fn($q) => $q->where('division_id', $request->division_id))
                 ->paginate(10);
 
-            if (empty($employees)) {
-                    return response()->json(['message' => 'Data tidak ditemukan!'], 404);
-            }
+                if ($employees->isEmpty()) {
+                    return response()->json(['status' => 'error', 'message' => 'Data tidak ditemukan!'], 404);
+                }
 
             return response()->json([
                 'status' => 'success',
@@ -56,7 +56,7 @@ class EmployeeController extends Controller
     {
         try {
             $validated = $request->validate([
-                'image' => 'required|image|max:2048',
+                'image' => 'required|image',
                 'name' => 'required|string|max:255',
                 'phone' => 'required|string|max:15',
                 'division' => 'required|uuid|exists:divisions,id',
@@ -91,13 +91,15 @@ class EmployeeController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan pada server',
+                'message' => 'Terjadi kesalahan pada server ' . $e->getMessage(),
             ], 500);
         }
     }
     public function update(Request $request, $id)
     {
         try {
+            $employee = Employee::where('id', $id)->firstOrFail();
+
             $validated = $request->validate([
                 'image' => 'sometimes|image|max:2048',
                 'name' => 'required|string|max:255',
@@ -106,15 +108,11 @@ class EmployeeController extends Controller
                 'position' => 'required|string|max:255',
             ]);
 
-            $employee = Employee::where('id', $id)->firstOrFail();
 
             DB::transaction(function () use ($request, $employee, $validated) {
                 if ($request->hasFile('image')) {
-                    // Perbaiki parameter kedua ke $employee
                     $validated['image'] = $this->updateEmployeeImage($request->file('image'), $employee);
                 }
-
-                // Ubah division ke division_id sebelum update
                 $validated['division_id'] = $validated['division'];
                 unset($validated['division']);
 
@@ -130,7 +128,7 @@ class EmployeeController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'status'  => 'error',
-                'message' => 'Data karyawan tidak ditemukan',
+                'message' => 'Data tidak ditemukan',
             ], 404);
 
         } catch (ValidationException $e) {
@@ -147,7 +145,7 @@ class EmployeeController extends Controller
 
             return response()->json([
                 'status'  => 'error',
-                'message' => 'Terjadi kesalahan pada server',
+                'message' => 'Terjadi kesalahan pada server' . $e->getMessage(),
             ], 500);
         }
     }

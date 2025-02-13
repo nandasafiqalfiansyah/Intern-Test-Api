@@ -10,21 +10,23 @@ class NilaiController extends Controller
     {
     try {
         $data = DB::select("
-            SELECT
+           SELECT
             n.nisn,
             n.nama,
-            JSON_OBJECT(
-                'realistic', SUM(CASE WHEN p.kategori = 'realistic' THEN n.skor ELSE 0 END),
-                'investigative', SUM(CASE WHEN p.kategori = 'investigative' THEN n.skor ELSE 0 END),
-                'artistic', SUM(CASE WHEN p.kategori = 'artistic' THEN n.skor ELSE 0 END),
-                'social', SUM(CASE WHEN p.kategori = 'social' THEN n.skor ELSE 0 END),
-                'enterprising', SUM(CASE WHEN p.kategori = 'enterprising' THEN n.skor ELSE 0 END),
-                'conventional', SUM(CASE WHEN p.kategori = 'conventional' THEN n.skor ELSE 0 END)
+            CONCAT(
+                '{',
+                '\"realistic\":', SUM(CASE WHEN p.kategori = 'realistic' THEN n.skor ELSE 0 END), ',',
+                '\"investigative\":', SUM(CASE WHEN p.kategori = 'investigative' THEN n.skor ELSE 0 END), ',',
+                '\"artistic\":', SUM(CASE WHEN p.kategori = 'artistic' THEN n.skor ELSE 0 END), ',',
+                '\"social\":', SUM(CASE WHEN p.kategori = 'social' THEN n.skor ELSE 0 END), ',',
+                '\"enterprising\":', SUM(CASE WHEN p.kategori = 'enterprising' THEN n.skor ELSE 0 END), ',',
+                '\"conventional\":', SUM(CASE WHEN p.kategori = 'conventional' THEN n.skor ELSE 0 END),
+                '}'
             ) AS nilaiRt
-        FROM nilai n
-        JOIN pelajaran p ON n.pelajaran_id = p.id
-        WHERE n.materi_uji_id = 7 AND p.is_khusus = 0
-        GROUP BY n.nisn, n.nama;
+            FROM nilai n
+            JOIN pelajaran p ON n.pelajaran_id = p.id
+            WHERE n.materi_uji_id = 7 AND p.is_khusus = 0
+            GROUP BY n.nisn, n.nama;
     ");
 
     if (empty($data)) {
@@ -44,7 +46,7 @@ class NilaiController extends Controller
 
         return response()->json([
             'status'  => 'error',
-            'message' => 'Terjadi kesalahan pada server',
+            'message' => 'Terjadi kesalahan pada server' . $e->getMessage(),
         ], 500);
     }
     }
@@ -53,23 +55,26 @@ class NilaiController extends Controller
         try {
             $data = DB::select("
                 SELECT
-
-                    JSON_OBJECT(
-                        'verbal', SUM(CASE WHEN n.pelajaran_id = 44 THEN n.skor * 41.67 ELSE 0 END),
-                        'kuantitatif', SUM(CASE WHEN n.pelajaran_id = 45 THEN n.skor * 29.67 ELSE 0 END),
-                        'penalaran', SUM(CASE WHEN n.pelajaran_id = 46 THEN n.skor * 100 ELSE 0 END),
-                        'figural', SUM(CASE WHEN n.pelajaran_id = 47 THEN n.skor * 23.81 ELSE 0 END)
-                    ) AS listNilai,
-                    n.nama,
-                    n.nisn,
-                    (SUM(CASE WHEN n.pelajaran_id = 44 THEN n.skor * 41.67 ELSE 0 END) +
+                CONCAT(
+                    '{',
+                    '\"verbal\":', SUM(CASE WHEN n.pelajaran_id = 44 THEN n.skor * 41.67 ELSE 0 END), ',',
+                    '\"kuantitatif\":', SUM(CASE WHEN n.pelajaran_id = 45 THEN n.skor * 29.67 ELSE 0 END), ',',
+                    '\"penalaran\":', SUM(CASE WHEN n.pelajaran_id = 46 THEN n.skor * 100 ELSE 0 END), ',',
+                    '\"figural\":', SUM(CASE WHEN n.pelajaran_id = 47 THEN n.skor * 23.81 ELSE 0 END),
+                    '}'
+                ) AS listNilai,
+                n.nama,
+                n.nisn,
+                (
+                    SUM(CASE WHEN n.pelajaran_id = 44 THEN n.skor * 41.67 ELSE 0 END) +
                     SUM(CASE WHEN n.pelajaran_id = 45 THEN n.skor * 29.67 ELSE 0 END) +
                     SUM(CASE WHEN n.pelajaran_id = 46 THEN n.skor * 100 ELSE 0 END) +
-                    SUM(CASE WHEN n.pelajaran_id = 47 THEN n.skor * 23.81 ELSE 0 END)) AS total
-                FROM nilai n
-                WHERE n.materi_uji_id = 4
-                GROUP BY n.nisn, n.nama
-                ORDER BY total DESC
+                    SUM(CASE WHEN n.pelajaran_id = 47 THEN n.skor * 23.81 ELSE 0 END)
+                ) AS total
+            FROM nilai n
+            WHERE n.materi_uji_id = 4
+            GROUP BY n.nisn, n.nama
+            ORDER BY total DESC;
             ");
 
             if (empty($data)) {

@@ -13,7 +13,7 @@ class DivisionController extends Controller
         $divisions = Division::when($request->name, fn($q) => $q->where('name', 'like', "%{$request->name}%"))
             ->paginate(10);
 
-        if (empty($divisions)) {
+        if (empty($divisions->items())) {
                 return response()->json(['message' => 'Data tidak ditemukan!'], 404);
         }
 
